@@ -55,6 +55,10 @@
     "message": "Add torrent with path",
     "description": "Context menu action"
   },
+  "addTorrentAnimePathAction": {
+    "message": "Add Seasonal Anime",
+    "description": "Context menu action"
+  },
   "addRssFeedAction": {
     "message": "Add RSS feed",
     "description": "Context menu action"
@@ -105,6 +109,10 @@
   },
   "serverDirectoriesOption": {
     "message": "Download directories",
+    "description": "Server directories option"
+  },
+  "serverAnimeDirectoriesOption": {
+    "message": "Anime download directories",
     "description": "Server directories option"
   },
   "torrentAddedNotification": {
@@ -168,8 +176,12 @@
     "description": "Label select"
   },
   "downloadLocationSelect": {
-    "message": "Download location",
+    "message": "Download Select",
     "description": "Download location select"
+  },
+  "downloadLocationUrl": {
+    "message": "Download location",
+    "description": "Download location"
   },
   "defaultOption": {
     "message": "Default",
