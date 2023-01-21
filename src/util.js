@@ -195,7 +195,7 @@ const whitelist = [
 
     // Site specific
     /^https:\/\/anidex\.info\/dl\/\d+$/,
-    /^https:\/\/animebytes\.tv\/torrent\/\d+\/download\/$/,
+    /^https:\/\/animebytes\.tv\/torrent\/\d+\/download\/[\w]+$/,
 ];
 
 export const isTorrentUrl = (url) => {
