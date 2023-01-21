@@ -42,7 +42,8 @@ const selectServer = (serverId) => {
     const serverOptions = options.servers[serverId];
     const client = clientList.find((client) => client.id === serverOptions.application);
 
-    const downloadLocationSelect = document.querySelector('#downloadLocation');
+    const downloadLocationSelect = document.querySelector('#downloadLocationSelector');
+    const input = document.querySelector('#downloadLocation');
 
     document.querySelectorAll('#downloadLocation > option').forEach((element, i) => {
         if (i > 0)
@@ -62,6 +63,11 @@ const selectServer = (serverId) => {
         downloadLocationSelect.value = '';
         downloadLocationSelect.disabled = true;
     }
+
+    downloadLocationSelect.addEventListener('change', (event) => {
+        const selectedValue = event.target.value;
+        input.value = selectedValue;
+    });
 
     const labelSelect = document.querySelector('#labels');
 

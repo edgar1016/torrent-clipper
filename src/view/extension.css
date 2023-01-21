@@ -305,6 +305,7 @@ textarea.browser-style {
   padding: 6px;
   transition-duration: 250ms;
   transition-property: box-shadow;
+  margin-left: 10px; 
 }
 
 .browser-style > input[type="text"],
@@ -367,7 +368,7 @@ textarea.browser-style:invalid:not(:focus) {
 /* Panel Section - Header */
 .panel-section-header {
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-  padding: 16px;
+  padding: 8px;
 }
 
 .panel-section-header > .icon-section-header {
