@@ -175,6 +175,10 @@
     "message": "Label",
     "description": "Label select"
   },
+  "labelListSelector": {
+    "message": "List",
+    "description": "Select list"
+  },
   "downloadLocationSelect": {
     "message": "Download Select",
     "description": "Download location select"
@@ -185,6 +189,14 @@
   },
   "defaultOption": {
     "message": "Default",
+    "description": "Default option"
+  },
+  "defaultOptionListSelect": {
+    "message": "Storage",
+    "description": "Default option"
+  },
+  "animeOptionListSelect": {
+    "message": "Anime",
     "description": "Default option"
   },
   "noneOption": {

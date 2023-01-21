@@ -44,6 +44,7 @@ const selectServer = (serverId) => {
 
     const downloadLocationSelect = document.querySelector('#downloadLocationSelector');
     const input = document.querySelector('#downloadLocation');
+    const listSelector = document.querySelector('#listSelector')
 
     document.querySelectorAll('#downloadLocation > option').forEach((element, i) => {
         if (i > 0)
@@ -63,6 +64,46 @@ const selectServer = (serverId) => {
         downloadLocationSelect.value = '';
         downloadLocationSelect.disabled = true;
     }
+
+    listSelector.addEventListener('change', (event) => {
+        var selectedValue = event.target.value;
+
+        while (downloadLocationSelect.options.length > 0) {
+            downloadLocationSelect.options[0].remove();
+        }
+        
+        if(selectedValue == "Storage"){
+            if (client.clientCapabilities && client.clientCapabilities.includes('path')) {
+                serverOptions.directories.forEach((directory) => {
+                    let element = document.createElement('option');
+                    element.setAttribute('value', directory);
+                    element.textContent = directory;
+                    downloadLocationSelect.appendChild(element);
+                });
+        
+                downloadLocationSelect.disabled = false;
+            } else {
+                downloadLocationSelect.value = '';
+                downloadLocationSelect.disabled = true;
+            }
+        }
+        
+        if(selectedValue == "Anime"){
+            if (client.clientCapabilities && client.clientCapabilities.includes('path')) {
+                serverOptions.animeDirectories.forEach((directory) => {
+                    let element = document.createElement('option');
+                    element.setAttribute('value', directory);
+                    element.textContent = directory;
+                    downloadLocationSelect.appendChild(element);
+                });
+        
+                downloadLocationSelect.disabled = false;
+            } else {
+                downloadLocationSelect.value = '';
+                downloadLocationSelect.disabled = true;
+            }
+        }
+    });
 
     downloadLocationSelect.addEventListener('change', (event) => {
         const selectedValue = event.target.value;

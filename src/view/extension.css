@@ -305,7 +305,6 @@ textarea.browser-style {
   padding: 6px;
   transition-duration: 250ms;
   transition-property: box-shadow;
-  margin-left: 10px; 
 }
 
 .browser-style > input[type="text"],
@@ -463,6 +462,7 @@ textarea.browser-style:invalid:not(:focus) {
 .panel-formElements-item select.browser-style {
   flex-grow: 1;
   margin-bottom: 0;
+  margin-right: 6px;
   min-width: 10px;
 }
 
