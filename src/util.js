@@ -160,6 +160,7 @@ export const loadOptions = () => {
                 username: '',
                 password: '',
                 directories: [],
+                animeDirectories: [],
                 clientOptions: {}
             }
         ]

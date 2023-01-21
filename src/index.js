@@ -226,11 +226,11 @@ const createDefaultMenu = () => {
 const createContextMenu = () => {
     const serverOptions = options.servers[options.globals.currentServer];
 
-    chrome.contextMenus.create({
-      id: 'add-torrent',
-      title: chrome.i18n.getMessage('addTorrentAction'),
-      contexts: ['link']
-    });
+    // chrome.contextMenus.create({
+    //   id: 'add-torrent',
+    //   title: chrome.i18n.getMessage('addTorrentAction'),
+    //   contexts: ['link']
+    // });
 
     const client = clientList.find((client) => client.id === serverOptions.application);
 
@@ -238,18 +238,18 @@ const createContextMenu = () => {
         if (client.clientCapabilities.length > 1) {
             chrome.contextMenus.create({
               id: 'add-torrent-advanced',
-              title: chrome.i18n.getMessage('addTorrentAction') + ' (' + chrome.i18n.getMessage('advancedModifier') + ')',
+              title: chrome.i18n.getMessage('addTorrentAction'), //+ ' (' + chrome.i18n.getMessage('advancedModifier') + ')',
               contexts: ['link']
             });
         }
 
-        if (client.clientCapabilities.includes('paused')) {
-            chrome.contextMenus.create({
-              id: 'add-torrent-paused',
-              title: chrome.i18n.getMessage('addTorrentPausedAction'),
-              contexts: ['link']
-            });
-        }
+        // if (client.clientCapabilities.includes('paused')) {
+        //     chrome.contextMenus.create({
+        //       id: 'add-torrent-paused',
+        //       title: chrome.i18n.getMessage('addTorrentPausedAction'),
+        //       contexts: ['link']
+        //     });
+        // }
 
         if (client.clientCapabilities.includes('label') && options.globals.labels.length) {
             chrome.contextMenus.create({
@@ -279,6 +279,23 @@ const createContextMenu = () => {
                 chrome.contextMenus.create({
                     id: 'add-torrent-path-' + i,
                     parentId: 'add-torrent-path',
+                    title: directory,
+                    contexts: ['link']
+                });
+            });
+        }
+
+        if (client.clientCapabilities.includes('path') && serverOptions.animeDirectories.length) {
+            chrome.contextMenus.create({
+                id: 'add-torrent-anime',
+                title: chrome.i18n.getMessage('addTorrentAnimePathAction'),
+                contexts: ['link']
+            });
+
+            serverOptions.animeDirectories.forEach((directory, i) => {
+                chrome.contextMenus.create({
+                    id: 'add-torrent-anime-' + i,
+                    parentId: 'add-torrent-anime',
                     title: directory,
                     contexts: ['link']
                 });
@@ -314,21 +331,36 @@ const createContextMenu = () => {
                 });
             });
         }
-    }
 
-    if (client.clientCapabilities && client.clientCapabilities.includes('rss')) {
-        if (options.globals.contextMenu === 1) {
+        if (client.clientCapabilities.includes('path') && serverOptions.directories.length) {
             chrome.contextMenus.create({
                 contexts: ['link'],
                 type: 'separator'
             });
-        }
 
-        chrome.contextMenus.create({
-          id: 'add-rss-feed',
-          title: chrome.i18n.getMessage('addRssFeedAction'),
-          contexts: options.globals.contextMenu === 1 ? ['selection', 'link'] : ['selection']
-        });
+            serverOptions.animeDirectories.forEach((directory, i) => {
+                chrome.contextMenus.create({
+                    id: 'add-torrent-anime-' + i,
+                    title: directory,
+                    contexts: ['link']
+                });
+            });
+        }
+    }
+
+    if (client.clientCapabilities && client.clientCapabilities.includes('rss')) {
+        // if (options.globals.contextMenu === 1) {
+        //     chrome.contextMenus.create({
+        //         contexts: ['link'],
+        //         type: 'separator'
+        //     });
+        // }
+
+        // chrome.contextMenus.create({
+        //   id: 'add-rss-feed',
+        //   title: chrome.i18n.getMessage('addRssFeedAction'),
+        //   contexts: options.globals.contextMenu === 1 ? ['selection', 'link'] : ['selection']
+        // });
     }
 }
 
@@ -341,6 +373,7 @@ const registerHandler = () => {
         const currentServer = info.menuItemId.match(/^current-server-(\d+)$/);
         const labelId = info.menuItemId.match(/^add-torrent-label-(\d+)$/);
         const pathId = info.menuItemId.match(/^add-torrent-path-(\d+)$/);
+        const pathAnime = info.menuItemId.match(/^add-torrent-anime-(\d+)$/);
 
         const clientOptions = options.servers[options.globals.currentServer].clientOptions || {};
 
@@ -368,6 +401,12 @@ const registerHandler = () => {
             addTorrent(info.linkUrl, info.pageUrl, {
                 paused: options.globals.addPaused,
                 path: options.servers[options.globals.currentServer].directories[~~pathId[1]],
+                ...clientOptions
+            });
+        else if (pathAnime)
+            addTorrent(info.linkUrl, info.pageUrl, {
+                paused: options.globals.addPaused,
+                path: options.servers[options.globals.currentServer].animeDirectories[~~pathAnime[1]],
                 ...clientOptions
             });
         else if (info.menuItemId === 'add-torrent-advanced')
