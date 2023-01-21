@@ -111,6 +111,7 @@ const selectServer = (serverId) => {
     });
 
     const labelSelect = document.querySelector('#labels');
+    labelSelect.disabled = true;
 
     if (client.clientCapabilities && client.clientCapabilities.includes('label')) {
         labelSelect.disabled = false;
@@ -129,7 +130,7 @@ document.querySelector('#add-torrent').addEventListener('click', (e) => {
     e.preventDefault();
 
     const params = new URLSearchParams(window.location.search);
-    const label = document.querySelector('#labels').value;
+    // const label = document.querySelector('#labels').value;
     const path = document.querySelector('#downloadLocation').value;
     const addPaused = document.querySelector('#addpaused').checked;
     const server = document.querySelector('#server').value;
@@ -138,8 +139,8 @@ document.querySelector('#add-torrent').addEventListener('click', (e) => {
         paused: addPaused
     };
 
-    if (label.length)
-        options.label = label;
+    // if (label.length)
+    //     options.label = label;
 
     if (path.length)
         options.path = path;
