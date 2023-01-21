@@ -29,6 +29,7 @@ const persistOptions = () => {
     options.globals.labels = labels.map((label) => label.trim()).filter((label) => label.length);
 
     const directories = document.querySelector('#directories').value.split(/\n/g) || [];
+    const animeDirectories = document.querySelector('#animeDirectories').value.split(/\n/g) || [];
 
     let clientOptions = {};
     Array.from(document.querySelectorAll('*[id^="clientOptions"]')).forEach((element) => {
@@ -42,6 +43,7 @@ const persistOptions = () => {
         username: document.querySelector('#username').value,
         password: document.querySelector('#password').value,
         directories: directories.map((directory) => directory.trim()).filter((directory) => directory.length),
+        animeDirectories: animeDirectories.map((directory) => directory.trim()).filter((directory) => directory.length),
         clientOptions: clientOptions
     };
 
@@ -59,6 +61,7 @@ const restoreOptions = () => {
 
     document.querySelector('#labels').placeholder = 'Label\nAnother label'.replace(/\\n/g, '\n');
     document.querySelector('#directories').placeholder = '/home/user/downloads\n/data/incomplete'.replace(/\\n/g, '\n');
+    document.querySelector('#animeDirectories').placeholder = '/home/user/downloads\n/data/incomplete'.replace(/\\n/g, '\n');
 
     document.querySelectorAll('[data-i18n]').forEach((element) => {
         element.textContent = chrome.i18n.getMessage(element.getAttribute('data-i18n'));
@@ -120,6 +123,7 @@ const restoreServer = (id) => {
     document.querySelector('#username').value = server.username;
     document.querySelector('#password').value = server.password;
     document.querySelector('#directories').value = server.directories.join('\n');
+    document.querySelector('#animeDirectories').value = server.animeDirectories.join('\n');
 
     document.querySelector('#application').dispatchEvent(new Event('change'));
 
@@ -136,7 +140,8 @@ const addServer = () => {
         hostname: '',
         username: '',
         password: '',
-        directories: []
+        directories: [],
+        animeDirectories: []
     });
 
     restoreServerList();
@@ -196,6 +201,9 @@ document.querySelector('#application').addEventListener('change', (e) => {
             document.querySelector('#hostname').value = client.addressPlaceholder;
 
         document.querySelector('[data-panel="directories"]').style.display =
+            client.clientCapabilities && client.clientCapabilities.includes('path') ? 'flex' : 'none';
+
+        document.querySelector('[data-panel="animeDirectories"]').style.display =
             client.clientCapabilities && client.clientCapabilities.includes('path') ? 'flex' : 'none';
 
         document.querySelector('[data-panel="labels"]').style.display =
