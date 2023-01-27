@@ -111,7 +111,6 @@ const selectServer = (serverId) => {
     });
 
     const labelSelect = document.querySelector('#labels');
-    labelSelect.disabled = true;
 
     if (client.clientCapabilities && client.clientCapabilities.includes('label')) {
         labelSelect.disabled = false;
