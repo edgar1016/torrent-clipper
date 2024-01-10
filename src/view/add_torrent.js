@@ -5,6 +5,12 @@ import {
 
 var options;
 
+const saveDownloadLocation = (downloadLocation) => {
+    chrome.storage.sync.set({ 'lastDownloadLocation': downloadLocation }, () => {
+        console.log('Download location saved:', downloadLocation);
+    });
+};
+
 const restoreOptions = () => {
     const params = new URLSearchParams(window.location.search);
     document.querySelector('#url').value = params.get('url');
@@ -33,6 +39,19 @@ const restoreOptions = () => {
         });
 
         selectServer(options.globals.currentServer);
+    });
+
+    // Load last used download location from storage
+    console.log('Restoring options');
+    chrome.storage.sync.get(['lastDownloadLocation'], (result) => {
+        console.log('Storage result:', result);
+        const lastDownloadLocation = result.lastDownloadLocation;
+        if (lastDownloadLocation) {
+            console.log('Setting download location from storage:', lastDownloadLocation);
+            document.querySelector('#downloadLocation').value = lastDownloadLocation;
+        } else {
+            console.log('No stored download location found.');
+        }
     });
 }
 
@@ -108,12 +127,12 @@ const selectServer = (serverId) => {
     downloadLocationSelect.addEventListener('change', (event) => {
         const selectedValue = event.target.value;
         input.value = selectedValue;
-    });
+      });
 
     const labelSelect = document.querySelector('#labels');
 
     if (client.clientCapabilities && client.clientCapabilities.includes('label')) {
-        labelSelect.disabled = false;
+        //labelSelect.disabled = false;
     } else {
         labelSelect.value = '';
         labelSelect.disabled = true;
@@ -133,6 +152,9 @@ document.querySelector('#add-torrent').addEventListener('click', (e) => {
     const path = document.querySelector('#downloadLocation').value;
     const addPaused = document.querySelector('#addpaused').checked;
     const server = document.querySelector('#server').value;
+
+    saveDownloadLocation(path);
+    console.log('Download location changed:', path);
 
     let options = {
         paused: addPaused
