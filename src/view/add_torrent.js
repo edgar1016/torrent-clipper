@@ -149,9 +149,28 @@ document.querySelector('#add-torrent').addEventListener('click', (e) => {
 
     const params = new URLSearchParams(window.location.search);
     // const label = document.querySelector('#labels').value;
-    const path = document.querySelector('#downloadLocation').value;
+    let path = document.querySelector('#downloadLocation').value;
     const addPaused = document.querySelector('#addpaused').checked;
     const server = document.querySelector('#server').value;
+
+    // Define mappings for drive letter replacements
+    const mappings = [
+        { source: 'Y', destination: 'D' },  // Storage
+        { source: 'S', destination: 'F' },  // Storage_Two
+        { source: 'T', destination: 'G' },  // Anime
+        { source: 'V', destination: 'I' },  // Anime_Two
+        { source: 'U', destination: 'E' },  // JAV
+        { source: 'Z', destination: 'H' },  // West
+        { source: 'W', destination: 'J' }   // Other
+    ];
+
+    // Iterate through mappings and perform replacements
+    for (const { source, destination } of mappings) {
+        if (path.startsWith(`${source}:\\`)) {
+            path = `${destination}:\\${path.substring(3)}`;
+            break; // Stop after first replacement
+        }
+    }
 
     saveDownloadLocation(path);
     console.log('Download location changed:', path);
