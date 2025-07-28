@@ -156,12 +156,15 @@ document.querySelector('#add-torrent').addEventListener('click', (e) => {
     // Define mappings for drive letter replacements
     const mappings = [
         { source: 'Y', destination: 'D' },  // Storage
-        { source: 'S', destination: 'F' },  // Storage_Two
+        { source: 'S', destination: 'F' },  // JAV2
         { source: 'T', destination: 'G' },  // Anime
         { source: 'V', destination: 'I' },  // Anime_Two
-        { source: 'U', destination: 'E' },  // JAV
+        { source: 'U', destination: 'E' },  // JAV1
         { source: 'Z', destination: 'H' },  // West
-        { source: 'W', destination: 'J' }   // Other
+        { source: 'W', destination: 'J' },  // Software
+        { source: 'X', destination: 'Y' },  // JAV3
+        { source: 'Q', destination: 'X' },  // JAV4
+        { source: 'R', destination: 'W' }  // VR
     ];
 
     // Iterate through mappings and perform replacements
