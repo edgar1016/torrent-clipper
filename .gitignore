@@ -5,3 +5,5 @@ web-ext-artifacts/
 *.pem
 *.lock
 *.png
+/.github
+/.gitignore

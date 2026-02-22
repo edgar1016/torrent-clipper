@@ -43,14 +43,18 @@ const restoreOptions = () => {
 
     // Load last used download location from storage
     console.log('Restoring options');
-    chrome.storage.sync.get(['lastDownloadLocation'], (result) => {
-        console.log('Storage result:', result);
+    chrome.storage.sync.get(['lastDownloadLocation', 'lastDownloadSuffix'], (result) => {
         const lastDownloadLocation = result.lastDownloadLocation;
+        const lastDownloadSuffix = result.lastDownloadSuffix;
+
         if (lastDownloadLocation) {
-            console.log('Setting download location from storage:', lastDownloadLocation);
             document.querySelector('#downloadLocation').value = lastDownloadLocation;
+        }
+
+        if (lastDownloadSuffix !== undefined) {
+            document.querySelector('#downloadSuffix').value = lastDownloadSuffix;
         } else {
-            console.log('No stored download location found.');
+            document.querySelector('#downloadSuffix').value = ''; // clear first run
         }
     });
 }
@@ -144,49 +148,79 @@ const selectServer = (serverId) => {
 
 document.addEventListener('DOMContentLoaded', restoreOptions);
 document.querySelector('#server').addEventListener('change', (e) => selectServer(~~e.currentTarget.value));
+
+const mappings = [
+    { source: 'X', destination: 'D' }, //Storage
+    { source: 'S', destination: 'F' }, //JAV2
+    { source: 'P', destination: 'G' }, //Anime
+    { source: 'Q', destination: 'I' }, //Anime2
+    { source: 'R', destination: 'E' }, //JAV1
+    { source: 'Z', destination: 'H' }, //West
+    { source: 'W', destination: 'J' }, //Software
+    { source: 'T', destination: 'Y' }, //JAV3
+    { source: 'U', destination: 'X' }, //JAV4
+    { source: 'Y', destination: 'W' }  //VR
+];
+
 document.querySelector('#add-torrent').addEventListener('click', (e) => {
     e.preventDefault();
 
     const params = new URLSearchParams(window.location.search);
-    // const label = document.querySelector('#labels').value;
-    let path = document.querySelector('#downloadLocation').value;
+
+    const basePath = document.querySelector('#downloadLocation').value;
+    const suffix = document.querySelector('#downloadSuffix').value.trim();
     const addPaused = document.querySelector('#addpaused').checked;
     const server = document.querySelector('#server').value;
 
-    // Define mappings for drive letter replacements
-    const mappings = [
-        { source: 'Y', destination: 'D' },  // Storage
-        { source: 'S', destination: 'F' },  // JAV2
-        { source: 'T', destination: 'G' },  // Anime
-        { source: 'V', destination: 'I' },  // Anime_Two
-        { source: 'U', destination: 'E' },  // JAV1
-        { source: 'Z', destination: 'H' },  // West
-        { source: 'W', destination: 'J' },  // Software
-        { source: 'X', destination: 'Y' },  // JAV3
-        { source: 'Q', destination: 'X' },  // JAV4
-        { source: 'R', destination: 'W' }  // VR
+    // ✅ Save original base and suffix
+    saveDownloadLocation(basePath);
+    chrome.storage.sync.set({ 'lastDownloadSuffix': suffix }, () => {
+        console.log('Suffix saved:', suffix);
+    });
+
+    // ✅ Build combined path (don't modify input fields!)
+    let fullPath = basePath;
+
+    const illegalChars = /[<>:"/\\|?*]/;
+    const reservedNames = [
+        'CON', 'PRN', 'AUX', 'NUL',
+        'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9',
+        'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9'
     ];
 
-    // Iterate through mappings and perform replacements
+    if (suffix) {
+        if (illegalChars.test(suffix)) {
+            alert("The subfolder name contains invalid characters (<>:\"/\\|?*)");
+            return;
+        }
+
+        const baseName = suffix.split(/[\\/]/).pop().toUpperCase();
+        if (reservedNames.includes(baseName)) {
+            alert(`"${baseName}" is a reserved Windows name and cannot be used.`);
+            return;
+        }
+
+        // Add suffix to path with correct slash
+        if (!fullPath.endsWith('\\') && !fullPath.endsWith('/')) {
+            fullPath += fullPath.includes('\\') ? '\\' : '/';
+        }
+        fullPath += suffix;
+    }
+
+    // ✅ Apply NAS mapping LAST
     for (const { source, destination } of mappings) {
-        if (path.startsWith(`${source}:\\`)) {
-            path = `${destination}:\\${path.substring(3)}`;
-            break; // Stop after first replacement
+        if (fullPath.startsWith(`${source}:\\`)) {
+            fullPath = `${destination}:\\${fullPath.substring(3)}`;
+            break;
         }
     }
 
-    saveDownloadLocation(path);
-    console.log('Download location changed:', path);
+    console.log('Download location changed:', fullPath);
 
     let options = {
-        paused: addPaused
+        paused: addPaused,
+        path: fullPath
     };
-
-    // if (label.length)
-    //     options.label = label;
-
-    if (path.length)
-        options.path = path;
 
     if (server)
         options.server = ~~server;
