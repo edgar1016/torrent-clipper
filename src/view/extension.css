@@ -437,7 +437,7 @@ textarea.browser-style:invalid:not(:focus) {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: 16px;
+  padding: 16px 16px 8px 16px; /* bottom padding reduced */
 }
 
 .panel-formElements-item {
