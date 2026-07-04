@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Torrent Clipper",
   "version": "0.2.19.0",
   "description": "Add torrent and magnet links to your Bittorrent client's web interface. Modified to have seasonal anime",
@@ -12,8 +12,13 @@
   "options_ui": {
     "page": "view/options.html"
   },
-  "browser_action": {
+  "action": {
     "default_area": "navbar",
+    "default_icon": {
+      "32": "icon/default-32.png",
+      "48": "icon/default-48.png",
+      "64": "icon/default-64.png"
+    },
     "theme_icons": [{
       "light": "icon/default-light.svg",
       "dark": "icon/default.svg",
@@ -27,13 +32,17 @@
   "permissions": [
     "contextMenus",
     "cookies",
+    "downloads",
     "notifications",
     "storage",
-    "webRequest",
-    "webRequestBlocking",
+    "tabs",
+    "webRequest"
+  ],
+  "host_permissions": [
     "<all_urls>"
   ],
   "background": {
-    "page": "background.html"
+    "service_worker": "index.js",
+    "type": "module"
   }
 }
