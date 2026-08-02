@@ -255,3 +255,51 @@ document.querySelector('#hostname').addEventListener('input', (e) => {
     else
         document.querySelector('#hostname').setAttribute('style', 'border-color:red;');
 });
+
+document.querySelector('#export-settings').addEventListener('click', (e) => {
+    e.preventDefault();
+    const json = JSON.stringify(options, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'torrent-clipper-settings.json';
+    a.click();
+    URL.revokeObjectURL(url);
+});
+
+document.querySelector('#import-settings').addEventListener('click', (e) => {
+    e.preventDefault();
+    document.querySelector('#import-file').click();
+});
+
+document.querySelector('#import-file').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        try {
+            const imported = JSON.parse(event.target.result);
+            if (!imported.globals || !Array.isArray(imported.servers)) {
+                throw new Error('Invalid structure');
+            }
+            options = imported;
+            saveOptions(options).then(() => {
+                restoreServerList();
+                restoreServer(options.globals.currentServer || 0);
+                document.querySelector('[name="contextmenu"][value="' + options.globals.contextMenu + '"]').checked = true;
+                document.querySelector('#catchurls').checked = options.globals.catchUrls;
+                document.querySelector('#addpaused').checked = options.globals.addPaused;
+                document.querySelector('#addadvanced').checked = options.globals.addAdvanced;
+                document.querySelector('#enablenotifications').checked = options.globals.enableNotifications;
+                document.querySelector('#labels').value = options.globals.labels.join('\n');
+                saveButton.setAttribute('disabled', 'true');
+            });
+        } catch (_) {
+            alert(chrome.i18n.getMessage('importSettingsError'));
+        }
+        e.target.value = '';
+    };
+    reader.readAsText(file);
+});

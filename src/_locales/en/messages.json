@@ -206,5 +206,17 @@
   "addAsPausedOption": {
     "message": "Add as paused",
     "description": "Add as paused"
+  },
+  "exportSettingsAction": {
+    "message": "Export settings",
+    "description": "Export settings action"
+  },
+  "importSettingsAction": {
+    "message": "Import settings",
+    "description": "Import settings action"
+  },
+  "importSettingsError": {
+    "message": "Failed to import settings: invalid file.",
+    "description": "Import settings error"
   }
 }

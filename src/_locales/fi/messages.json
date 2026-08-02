@@ -47,6 +47,18 @@
     "message": "Lisää RSS-syöte",
     "description": "Context menu action"
   },
+  "exportSettingsAction": {
+    "message": "Vie asetukset",
+    "description": "Export settings action"
+  },
+  "importSettingsAction": {
+    "message": "Tuo asetukset",
+    "description": "Import settings action"
+  },
+  "importSettingsError": {
+    "message": "Asetusten tuonti epäonnistui: virheellinen tiedosto.",
+    "description": "Import settings error"
+  },
   "advancedModifier": {
     "message": "Edistynyt",
     "description": "Advanced modifier"
